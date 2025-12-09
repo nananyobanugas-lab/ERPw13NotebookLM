@@ -4,13 +4,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "@google/genai": "^0.1.2",
+    "@google/genai": "*",
     "lucide-react": "^0.456.0",
     "recharts": "^2.13.3",
     "react-markdown": "^9.0.1"
