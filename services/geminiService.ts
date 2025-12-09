@@ -1,7 +1,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
-const apiKey = process.env.API_KEY || '';
-const ai = new GoogleGenAI({ apiKey });
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 /**
  * PROMPT TEMPLATE 1: Schema Design
@@ -63,20 +62,6 @@ export const extractInvoiceData = async (base64Image: string, mimeType: string) 
   - Determine GL Account Credit (e.g., 'Accounts Payable').
   - Provide a Confidence Score (0-100).
   - If Confidence < 90, set 'requiresReview' to true.
-
-  Return JSON matching this schema:
-  {
-    "vendorName": string,
-    "invoiceId": string,
-    "totalAmount": number,
-    "taxAmount": number,
-    "currency": string,
-    "itemDescription": string,
-    "glDebitAccount": string,
-    "glCreditAccount": string,
-    "confidenceScore": number,
-    "requiresReview": boolean
-  }
   `;
 
   try {
@@ -90,6 +75,33 @@ export const extractInvoiceData = async (base64Image: string, mimeType: string) 
       },
       config: {
         responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            vendorName: { type: Type.STRING },
+            invoiceId: { type: Type.STRING },
+            totalAmount: { type: Type.NUMBER },
+            taxAmount: { type: Type.NUMBER },
+            currency: { type: Type.STRING },
+            itemDescription: { type: Type.STRING },
+            glDebitAccount: { type: Type.STRING },
+            glCreditAccount: { type: Type.STRING },
+            confidenceScore: { type: Type.NUMBER },
+            requiresReview: { type: Type.BOOLEAN },
+          },
+          required: [
+            "vendorName",
+            "invoiceId",
+            "totalAmount",
+            "taxAmount",
+            "currency",
+            "itemDescription",
+            "glDebitAccount",
+            "glCreditAccount",
+            "confidenceScore",
+            "requiresReview"
+          ],
+        }
       }
     });
     return response.text;
